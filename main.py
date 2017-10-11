@@ -10,22 +10,25 @@ import parser as p
 import calculate as c
 
 def main():
+    # Commonly used data
+    v = "vocabulary"
+    y = "classes"
+    
     # Use Parse module to import dataset prepare fetaures and 
     # vocabulary
-    ds = p.ParseData("SmallIMDB")
+    parse = p.ParseData()
+    ds = parse.training("SmallIMDB")
     
     # Use Calc class to retrive term frequency of each class
-    calc =  c.Calculate(ds.vocabulary)
-    nf = calc.termFrequency(ds.vocabulary, ds.classes["neg"])
-    pf = calc.termFrequency(ds.vocabulary, ds.classes["pos"])
+    calc =  c.Calculate(ds[v])
+    nf = calc.termFrequency(ds[v], ds[y]["neg"])
+    pf = calc.termFrequency(ds[v], ds[y]["pos"])
     
     # Get term probability multinomial model formula
-    np = calc.termProbability(ds.vocabulary, nf)
-    pp = calc.termProbability(ds.vocabulary, pf)
+    np = calc.termProbability(ds[v], nf)
+    pp = calc.termProbability(ds[v], pf)
     
     
-    
-    print(np)
     
     
     return 
