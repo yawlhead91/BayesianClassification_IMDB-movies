@@ -56,10 +56,9 @@ class Calculate:
                 
             if i in pp:
                 pos += log(pp[i])
-                
-                
-        n = (neg*100)/(pos+neg)
-        p = (pos*100)/(pos+neg)
-        
-        
-        return (p > n)
+            
+        return (pos > neg)
+    
+    
+    def accuracy():
+        return

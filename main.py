@@ -19,7 +19,7 @@ def main():
     # Use Parse module to import dataset prepare fetaures and 
     # vocabulary and test data
     parse = p.ParseData()
-    ds = parse.training("SmallIMDB")
+    ds = parse.training("LargeIMDB")
     td = parse.test("TestData")
     
     # Use Calc class to retrive term frequency of each class
@@ -36,15 +36,33 @@ def main():
     
     negativeResults = []
     postiveResults = []
+    correctn = 0
+    correctp = 0
     
     # Test all knows negative test documents
     for tst in td["neg"]:
         negativeResults.append(calc.classification(ncp, pcp, np, pp, td["neg"][tst]))
+    
         
     # Test all knows negative test documents
     for tst in td["pos"]:
         postiveResults.append(calc.classification(ncp, pcp, np, pp, td["pos"][tst]))
     
+    for i in negativeResults:
+        if i == False:
+            correctn += 1
+            
+    
+    for i in postiveResults:
+        if i == True:
+            correctp += 1
+            
+    negp = (correctn/len(td["neg"]))*100
+    posp = (correctp/len(td["pos"]))*100
+    
+    acuracy = (negp+posp)/2
+    
+    print(acuracy,"% accurate")
     
     return 
 
