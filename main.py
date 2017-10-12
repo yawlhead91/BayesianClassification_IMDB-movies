@@ -19,8 +19,9 @@ def main():
     # Use Parse module to import dataset prepare fetaures and 
     # vocabulary and test data
     parse = p.ParseData()
-    ds = parse.training("LargeIMDB")
-    td = parse.test("TestData")
+    sw = parse.stopWords("Stopwords.txt")
+    ds = parse.training("LargeIMDB", sw)
+    td = parse.test("TestData", sw)
     
     # Use Calc class to retrive term frequency of each class
     calc =  c.Calculate(ds[v])

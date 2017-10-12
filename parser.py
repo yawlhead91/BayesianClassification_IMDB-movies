@@ -12,12 +12,26 @@ import re
 class ParseData:
     
     def __init__(self):
-        return 
+       return
+   
+    
+    def stopWords(self, dirc):
+        s = set()
+        absPath = os.path.abspath(dirc)
+        of = open(absPath, "r", encoding="utf8").read().split()
+        for word in of:
+            # Strip any special characters, white spaces puntuation ect ..
+            w = re.sub('[^A-Za-z0-9]+','', word).lower()
+            if w:
+                s.add(w)
+        
+        return s
+    
     
     # Pasrse directory and create vocabulary set of uniq words/features
     # into a set also save classes fetures into a dictory hold class words inside 
     # an array. This save any more reads IO
-    def training(self, dirc):
+    def training(self, dirc, sw):
         rtn = dict()
         vocabulary = set()
         classes = dict()
@@ -46,6 +60,9 @@ class ParseData:
                 for word in of:
                     # Strip any special characters, white spaces puntuation ect ..
                     w = re.sub('[^A-Za-z0-9]+','', word).lower()
+                    if w in sw:
+                        continue
+                    
                     if w:
                         vocabulary.add(w)
                         classes[d].append(w)
@@ -59,7 +76,7 @@ class ParseData:
     
     
     
-    def test(self, dirc):
+    def test(self, dirc, sw):
         
         rtn = dict()
         
