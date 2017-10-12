@@ -34,10 +34,17 @@ def main():
     ncp = calc.classProbability(ds[d], ds[cc]["neg"])
     pcp = calc.classProbability(ds[d], ds[cc]["pos"])
     
+    negativeResults = []
+    postiveResults = []
+    
+    # Test all knows negative test documents
+    for tst in td["neg"]:
+        negativeResults.append(calc.classification(ncp, pcp, np, pp, td["neg"][tst]))
+        
     # Test all knows negative test documents
     for tst in td["pos"]:
-        tpd = calc.classification(ncp, pcp, np, pp, td["pos"][tst])
-        print(tpd)
+        postiveResults.append(calc.classification(ncp, pcp, np, pp, td["pos"][tst]))
+    
     
     return 
 

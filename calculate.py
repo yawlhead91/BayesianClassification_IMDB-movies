@@ -54,15 +54,12 @@ class Calculate:
             if i in np:
                 neg += log(np[i])
                 
-        for i in tst:
-            if i in np:
-                neg += log(np[i])
-                
             if i in pp:
                 pos += log(pp[i])
                 
                 
-        if pos < neg:
-            return True
+        n = (neg*100)/(pos+neg)
+        p = (pos*100)/(pos+neg)
         
-        return False
+        
+        return (p > n)
