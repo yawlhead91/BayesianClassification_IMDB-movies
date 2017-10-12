@@ -13,11 +13,14 @@ def main():
     # Commonly used data
     v = "vocabulary"
     y = "classes"
+    d = "documents"
+    cc = "classcount"
     
     # Use Parse module to import dataset prepare fetaures and 
-    # vocabulary
+    # vocabulary and test data
     parse = p.ParseData()
     ds = parse.training("SmallIMDB")
+    td = parse.test("TestData")
     
     # Use Calc class to retrive term frequency of each class
     calc =  c.Calculate(ds[v])
@@ -28,8 +31,13 @@ def main():
     np = calc.termProbability(ds[v], nf)
     pp = calc.termProbability(ds[v], pf)
     
+    ncp = calc.classProbability(ds[d], ds[cc]["neg"])
+    pcp = calc.classProbability(ds[d], ds[cc]["pos"])
     
-    
+    # Test all knows negative test documents
+    for tst in td["pos"]:
+        tpd = calc.classification(ncp, pcp, np, pp, td["pos"][tst])
+        print(tpd)
     
     return 
 

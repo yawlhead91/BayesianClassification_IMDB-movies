@@ -10,6 +10,7 @@ import re
 
 
 class ParseData:
+    
     def __init__(self):
         return 
     
@@ -20,6 +21,8 @@ class ParseData:
         rtn = dict()
         vocabulary = set()
         classes = dict()
+        classcount = dict()
+        documents = 0
         
         absPath = os.path.abspath(dirc)
         
@@ -28,14 +31,17 @@ class ParseData:
         for d in os.listdir(absPath):
             # If dirctory is not one of a postive or negative class break!
             if d.lower() != "neg" and d.lower() != "pos":
-                break
+                continue
             
             classes[d] = []
+            classcount[d] = 0
             
             files = [f for f in os.listdir(os.path.join(absPath, d)) 
             if os.path.isfile(os.path.join(absPath, d, f))]
             
             for f in files:
+                documents += 1
+                classcount[d] += 1
                 of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read().split()
                 for word in of:
                     # Strip any special characters, white spaces puntuation ect ..
@@ -44,14 +50,49 @@ class ParseData:
                         vocabulary.add(w)
                         classes[d].append(w)
                         
+        # Append to return dict
         rtn["vocabulary"] = vocabulary
+        rtn["classcount"] = classcount
+        rtn["documents"] = documents
         rtn["classes"] = classes
         return rtn
     
     
+    
     def test(self, dirc):
         
-        return
+        rtn = dict()
+        
+        
+        absPath = os.path.abspath(dirc)
+        
+        # For each directory in giving path -> for each file in subdir ->
+        # read file take unique words
+        for d in os.listdir(absPath):
+            # If dirctory is not one of a postive or negative class break!
+            
+            if d.lower() != "neg" and d.lower() != "pos":
+                continue
+            
+            rtn[d] = dict()
+            
+            files = [f for f in os.listdir(os.path.join(absPath, d)) 
+            if os.path.isfile(os.path.join(absPath, d, f))]
+            
+            for f in files:
+                rtn[d][f] = []
+                of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read().split()
+                for word in of:
+                    # Strip any special characters, white spaces puntuation ect ..
+                    w = re.sub('[^A-Za-z0-9]+','', word).lower()
+                    if w:
+                        rtn[d][f].append(w)
+                        
+        return rtn
+    
+    
+    
+    
     
     
     
