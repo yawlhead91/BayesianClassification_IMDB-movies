@@ -7,12 +7,14 @@ Created on Tue Oct 10 14:23:03 2017
 """
 import os
 import re
+from nltk.stem.porter import PorterStemmer
 
 
 class ParseData:
     
     def __init__(self):
-       return
+        self.porter_stemmer = PorterStemmer()
+        return
    
     
     def stopWords(self, dirc):
@@ -32,7 +34,6 @@ class ParseData:
     # into a set also save classes fetures into a dictory hold class words inside 
     # an array. This save any more reads IO
     def training(self, dirc, sw):
-        rtn = dict()
         vocabulary = set()
         classes = dict()
         classcount = dict()
@@ -67,12 +68,7 @@ class ParseData:
                         vocabulary.add(w)
                         classes[d].append(w)
                         
-        # Append to return dict
-        rtn["vocabulary"] = vocabulary
-        rtn["classcount"] = classcount
-        rtn["documents"] = documents
-        rtn["classes"] = classes
-        return rtn
+        return vocabulary, classcount, documents, classes
     
     
     
@@ -102,6 +98,9 @@ class ParseData:
                 for word in of:
                     # Strip any special characters, white spaces puntuation ect ..
                     w = re.sub('[^A-Za-z0-9]+','', word).lower()
+                    if w in sw:
+                        continue
+                    
                     if w:
                         rtn[d][f].append(w)
                         

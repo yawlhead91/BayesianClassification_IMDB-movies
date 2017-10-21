@@ -11,29 +11,37 @@ import calculate as c
 
 def main():
     # Commonly used data
-    v = "vocabulary"
-    y = "classes"
-    d = "documents"
-    cc = "classcount"
     
     # Use Parse module to import dataset prepare fetaures and 
     # vocabulary and test data
     parse = p.ParseData()
     sw = parse.stopWords("Stopwords.txt")
-    ds = parse.training("LargeIMDB", sw)
     td = parse.test("TestData", sw)
+    vocabulary, classcount, documents, classes = parse.training("LargeIMDB", sw)
+    
+    ln = len(classes["neg"])
+    lp = len(classes["pos"])
+    
+    
+    # Make length same on both sets of data
+    if  ln > lp:
+        classes["neg"] = classes["neg"][0:lp]
+    
+    if  lp > ln:
+        classes["pos"] = classes["pos"][0:ln]
+    
     
     # Use Calc class to retrive term frequency of each class
-    calc =  c.Calculate(ds[v])
-    nf = calc.termFrequency(ds[v], ds[y]["neg"])
-    pf = calc.termFrequency(ds[v], ds[y]["pos"])
+    calc =  c.Calculate(vocabulary)
+    nf = calc.termFrequency(vocabulary, classes["neg"])
+    pf = calc.termFrequency(vocabulary, classes["pos"])
     
     # Get term probability multinomial model formula
-    np = calc.termProbability(ds[v], nf)
-    pp = calc.termProbability(ds[v], pf)
+    np = calc.termProbability(vocabulary, nf)
+    pp = calc.termProbability(vocabulary, pf)
     
-    ncp = calc.classProbability(ds[d], ds[cc]["neg"])
-    pcp = calc.classProbability(ds[d], ds[cc]["pos"])
+    ncp = calc.classProbability(documents, classcount["neg"])
+    pcp = calc.classProbability(documents, classcount["pos"])
     
     negativeResults = []
     postiveResults = []
@@ -57,6 +65,7 @@ def main():
     for i in postiveResults:
         if i == True:
             correctp += 1
+
             
     negp = (correctn/len(td["neg"]))*100
     posp = (correctp/len(td["pos"]))*100
