@@ -7,6 +7,7 @@ Created on Tue Oct 10 14:23:03 2017
 """
 import os
 import re
+import nltk
 from nltk.stem.porter import PorterStemmer
 
 
@@ -20,8 +21,9 @@ class ParseData:
     def stopWords(self, dirc):
         s = set()
         absPath = os.path.abspath(dirc)
-        of = open(absPath, "r", encoding="utf8").read().split()
-        for word in of:
+        of = open(absPath, "r", encoding="utf8").read()
+        allwords = nltk.word_tokenize(of)
+        for word in allwords:
             # Strip any special characters, white spaces puntuation ect ..
             w = re.sub('[^A-Za-z0-9]+','', word).lower()
             if w:
@@ -34,7 +36,7 @@ class ParseData:
     # into a set also save classes fetures into a dictory hold class words inside 
     # an array. This save any more reads IO
     def training(self, dirc, sw):
-        vocabulary = set()
+        vocabulary = list()
         classes = dict()
         classcount = dict()
         documents = 0
@@ -57,16 +59,20 @@ class ParseData:
             for f in files:
                 documents += 1
                 classcount[d] += 1
-                of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read().split()
-                for word in of:
+                of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read()
+                allwords = nltk.word_tokenize(of)
+                
+                for word in allwords:
                     # Strip any special characters, white spaces puntuation ect ..
                     w = re.sub('[^A-Za-z0-9]+','', word).lower()
-                    if w in sw:
-                        continue
                     
                     if w:
-                        vocabulary.add(w)
+                        vocabulary.append(w)
                         classes[d].append(w)
+        
+            # Implenent n-gram model convert to list to utalize list functionality
+            vocabulary = list(zip(vocabulary, vocabulary[1:]))
+            classes[d] = list(zip(classes[d], classes[d][1:]))
                         
         return vocabulary, classcount, documents, classes
     
@@ -95,15 +101,18 @@ class ParseData:
             for f in files:
                 rtn[d][f] = []
                 of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read().split()
+                
+                #allwords = nltk.word_tokenize(of)
+                #print(allwords)
                 for word in of:
                     # Strip any special characters, white spaces puntuation ect ..
                     w = re.sub('[^A-Za-z0-9]+','', word).lower()
-                    if w in sw:
-                        continue
                     
                     if w:
                         rtn[d][f].append(w)
-                        
+                
+                rtn[d][f] = list(zip(rtn[d][f], rtn[d][f][1:]))
+                
         return rtn
     
     

@@ -8,7 +8,8 @@ Created on Tue Oct 10 14:39:28 2017
 
 import parser as p
 import calculate as c
-
+import nltk
+ 
 def main():
     # Commonly used data
     
@@ -40,6 +41,7 @@ def main():
     np = calc.termProbability(vocabulary, nf)
     pp = calc.termProbability(vocabulary, pf)
     
+    # Get probablity for each class
     ncp = calc.classProbability(documents, classcount["neg"])
     pcp = calc.classProbability(documents, classcount["pos"])
     
@@ -70,8 +72,13 @@ def main():
     negp = (correctn/len(td["neg"]))*100
     posp = (correctp/len(td["pos"]))*100
     
+    
     acuracy = (negp+posp)/2
     
+    print("documents", documents)
+    print("tests", len(td["neg"]) + len(td["pos"]))
+    print("nagative ", correctn, "/", len(td["neg"]))
+    print("postive ", correctp, "/", len(td["pos"]))
     print(acuracy,"% accurate")
     
     return 
