@@ -65,10 +65,14 @@ class ParseData:
                 for word in allwords:
                     # Strip any special characters, white spaces puntuation ect ..
                     w = re.sub('[^A-Za-z0-9]+','', word).lower()
+                    # Removing stop words
+                    #if w in sw:
+                        #continue
                     
                     if w:
-                        vocabulary.append(w)
-                        classes[d].append(w)
+                        #l = self.porter_stemmer.stem(w)
+                        vocabulary.append(l)
+                        classes[d].append(l)
         
             # Implenent n-gram model convert to list to utalize list functionality
             vocabulary = list(zip(vocabulary, vocabulary[1:]))
@@ -77,7 +81,7 @@ class ParseData:
         return vocabulary, classcount, documents, classes
     
     
-    
+        
     def test(self, dirc, sw):
         
         rtn = dict()
@@ -100,16 +104,22 @@ class ParseData:
             
             for f in files:
                 rtn[d][f] = []
-                of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read().split()
+                of = open(os.path.join(absPath, d, f), "r", encoding="utf8").read()
+                allwords = nltk.word_tokenize(of)
                 
                 #allwords = nltk.word_tokenize(of)
                 #print(allwords)
-                for word in of:
+                for word in allwords:
                     # Strip any special characters, white spaces puntuation ect ..
                     w = re.sub('[^A-Za-z0-9]+','', word).lower()
                     
+                    # Removing stop words
+                    #if w in sw:
+                        #continue
+                    
                     if w:
-                        rtn[d][f].append(w)
+                        #l = self.porter_stemmer.stem(w)
+                        rtn[d][f].append(l)
                 
                 rtn[d][f] = list(zip(rtn[d][f], rtn[d][f][1:]))
                 

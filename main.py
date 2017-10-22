@@ -8,7 +8,6 @@ Created on Tue Oct 10 14:39:28 2017
 
 import parser as p
 import calculate as c
-import nltk
  
 def main():
     # Commonly used data
